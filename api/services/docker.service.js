@@ -38,7 +38,8 @@ class DockerService {
       );
       
       // Generate .env file
-      const envContent = await this.generateEnvFile(instanceName, serviceName, subdomain, port);
+      const customVars = resources?.envVars || {};
+      const envContent = await this.generateEnvFile(instanceName, serviceName, subdomain, port, customVars);
       await fs.writeFile(path.join(containerDir, '.env'), envContent);
       
       // Start container using docker-compose
@@ -90,18 +91,44 @@ class DockerService {
     }
   }
   
-  async generateEnvFile(instanceName, serviceName, subdomain, port) {
+  async generateEnvFile(instanceName, serviceName, subdomain, port, customVars = {}) {
     const templatePath = path.join(process.cwd(), 'services', serviceName, '.env.template');
+    const configPath = path.join(process.cwd(), 'services', serviceName, 'config.json');
+    
     let template = await fs.readFile(templatePath, 'utf-8');
+    
+    // Load service config for default env vars
+    let serviceConfig = {};
+    try {
+      const configContent = await fs.readFile(configPath, 'utf-8');
+      serviceConfig = JSON.parse(configContent);
+    } catch (error) {
+      console.warn(`⚠️  No config.json found for ${serviceName}, using defaults`);
+    }
     
     const containerIdentifier = `${instanceName}-${serviceName}`;
     
-    // Replace variables
-    template = template.replace(/\${INSTANCE_NAME}/g, instanceName);
-    template = template.replace(/\${CONTAINER_NAME}/g, containerIdentifier);
-    template = template.replace(/\${SUBDOMAIN}/g, subdomain);
-    template = template.replace(/\${PORT}/g, port);
-    template = template.replace(/\${BASE_DOMAIN}/g, process.env.BASE_DOMAIN || 'namaserver.xyz');
+    // Build variables with priority: customVars > serviceDefaults > systemDefaults
+    const variables = {
+      // System defaults (always available)
+      INSTANCE_NAME: instanceName,
+      CONTAINER_NAME: containerIdentifier,
+      SUBDOMAIN: subdomain,
+      PORT: port,
+      BASE_DOMAIN: process.env.BASE_DOMAIN || 'localhost',
+      
+      // Service-specific defaults from config.json
+      ...(serviceConfig.defaultEnvVars || {}),
+      
+      // User custom variables (highest priority)
+      ...customVars
+    };
+    
+    // Replace all variables dynamically
+    for (const [key, value] of Object.entries(variables)) {
+      const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
+      template = template.replace(regex, value);
+    }
     
     return template;
   }

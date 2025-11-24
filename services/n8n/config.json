@@ -11,5 +11,9 @@
     "SUBDOMAIN",
     "PORT",
     "BASE_DOMAIN"
-  ]
+  ],
+  "defaultEnvVars": {
+    "BASE_DOMAIN": "localhost",
+    "SUBDOMAIN": "auto"
+  }
 }
