@@ -1,0 +1,21 @@
+services:
+  n8n:
+    image: n8nio/n8n
+    container_name: ${CONTAINER_NAME}
+    restart: always
+    user: "1000:1000"
+    ports:
+      - "127.0.0.1:${PORT}:5678"
+    env_file:
+      - path: ./.env
+    environment:
+      - N8N_EDITOR_BASE_URL=https://${SUBDOMAIN}.${BASE_DOMAIN}
+      - WEBHOOK_URL=https://${SUBDOMAIN}.${BASE_DOMAIN}
+      - N8N_HOST=${SUBDOMAIN}.${BASE_DOMAIN}
+    volumes:
+      - ./data:/home/node/.n8n
+    deploy:
+      resources:
+        limits:
+          cpus: '${CPU_LIMIT}'
+          memory: ${MEMORY_LIMIT}

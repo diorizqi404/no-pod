@@ -1,0 +1,19 @@
+services:
+  gowa:
+    image: gowa/gowa:latest
+    container_name: ${CONTAINER_NAME}
+    restart: always
+    ports:
+      - "127.0.0.1:${PORT}:8080"
+    env_file:
+      - path: ./.env
+    environment:
+      - BASE_URL=https://${SUBDOMAIN}.${BASE_DOMAIN}
+      - APP_NAME=${INSTANCE_NAME}
+    volumes:
+      - ./data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: '${CPU_LIMIT}'
+          memory: ${MEMORY_LIMIT}

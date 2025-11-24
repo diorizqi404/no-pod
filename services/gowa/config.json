@@ -1,0 +1,15 @@
+{
+  "name": "gowa",
+  "description": "GOWA service",
+  "version": "latest",
+  "defaultPort": 8080,
+  "defaultCpu": "1",
+  "defaultMemory": "512M",
+  "requiredEnvVars": [
+    "INSTANCE_NAME",
+    "CONTAINER_NAME",
+    "SUBDOMAIN",
+    "PORT",
+    "BASE_DOMAIN"
+  ]
+}

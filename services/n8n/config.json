@@ -1,0 +1,15 @@
+{
+  "name": "n8n",
+  "description": "Workflow automation platform",
+  "version": "latest",
+  "defaultPort": 5678,
+  "defaultCpu": "2",
+  "defaultMemory": "1024M",
+  "requiredEnvVars": [
+    "INSTANCE_NAME",
+    "CONTAINER_NAME",
+    "SUBDOMAIN",
+    "PORT",
+    "BASE_DOMAIN"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "container-automation-api",
+  "version": "1.0.0",
+  "description": "Multi-service container automation platform",
+  "main": "api/server.js",
+  "scripts": {
+    "start": "node api/server.js",
+    "dev": "nodemon api/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "dockerode": "^4.0.2",
+    "mysql2": "^3.6.5",
+    "dotenv": "^16.3.1",
+    "swagger-ui-express": "^5.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "js-yaml": "^4.1.0",
+    "archiver": "^6.0.1",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
